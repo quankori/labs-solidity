@@ -9,6 +9,8 @@ import {
   KoriAirdrop__factory,
   KoriClaim,
   KoriClaim__factory,
+  KoriIDO,
+  KoriIDO__factory,
   KoriLottery,
   KoriLottery__factory,
   KoriToken,
@@ -117,6 +119,29 @@ const deploy = {
   ): Promise<ClaimVerifier> {
     return await (
       await new ClaimVerifier__factory(signer).deploy(trustedAddress)
+    ).deployed();
+  },
+  // Smart contract IDO
+  async ido(
+    signer: SignerWithAddress | Wallet,
+    tokenIDO: string,
+    sweepAddress: string,
+    adminWallet: string,
+    tokenIDOPrice: number,
+    purchaseCapMax: number,
+    purchaseCapMin: number,
+    purchaseMaximun: number
+  ): Promise<KoriIDO> {
+    return await (
+      await new KoriIDO__factory(signer).deploy(
+        tokenIDO,
+        adminWallet,
+        utils.parseEther(tokenIDOPrice.toString()),
+        utils.parseEther(purchaseCapMax.toString()),
+        utils.parseEther(purchaseCapMin.toString()),
+        utils.parseEther(purchaseMaximun.toString()),
+        sweepAddress
+      )
     ).deployed();
   },
 };
