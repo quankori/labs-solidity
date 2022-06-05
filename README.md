@@ -1,4 +1,4 @@
-# Smart contract Game Wheel
+# Smart contract
 
 ## Setup
 
