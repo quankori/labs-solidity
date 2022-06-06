@@ -2,7 +2,7 @@
 pragma solidity ^0.8.1;
 
 import "./ClaimHolder.sol";
-import "hardhat/console.sol";
+
 
 contract ClaimVerifier {
     event ClaimValid(ClaimHolder _identity, uint256 claimType);

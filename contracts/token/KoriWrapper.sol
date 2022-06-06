@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.1;
 // Interface
-import {IWETH} from "../interfaces/IWETH.sol";
+import "../interfaces/IWETH.sol";
 
 contract KoriWrapper is IWETH {
     string public name = "Wrapper ETH";
