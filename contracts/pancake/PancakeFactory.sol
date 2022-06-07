@@ -3,6 +3,7 @@ pragma solidity ^0.8.1;
 
 import "./interfaces/IPancakeFactory.sol";
 import "./PancakePair.sol";
+import "hardhat/console.sol";
 
 contract PancakeFactory is IPancakeFactory {
     bytes32 public constant INIT_CODE_PAIR_HASH =

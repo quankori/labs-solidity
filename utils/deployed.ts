@@ -15,6 +15,14 @@ import {
   KoriLottery__factory,
   KoriToken,
   KoriToken__factory,
+  PancakeERC20,
+  PancakeERC20__factory,
+  PancakeFactory,
+  PancakeFactory__factory,
+  PancakePair,
+  PancakePair__factory,
+  PancakeRouter,
+  PancakeRouter__factory,
 } from "../typechain";
 import { KoriMarketplace__factory } from "../typechain/factories/KoriMarketplace__factory";
 import { KoriNFT__factory } from "../typechain/factories/KoriNFT__factory";
@@ -144,8 +152,38 @@ const deploy = {
       )
     ).deployed();
   },
-  // Smart contract swap with pancake
-  
+  // Pancake ERC20
+  async pancakeERC20(
+    signer: SignerWithAddress | Wallet
+  ): Promise<PancakeERC20> {
+    return await (await new PancakeERC20__factory(signer).deploy()).deployed();
+  },
+  // Pancake Factory
+  async pancakeFactory(
+    signer: SignerWithAddress | Wallet,
+    feeAddress: string
+  ): Promise<PancakeFactory> {
+    return await (
+      await new PancakeFactory__factory(signer).deploy(feeAddress)
+    ).deployed();
+  },
+  // Pancake Pair
+  async pancakePair(signer: SignerWithAddress | Wallet): Promise<PancakePair> {
+    return await (await new PancakePair__factory(signer).deploy()).deployed();
+  },
+  // Pancake Router
+  async pancakeRouter(
+    signer: SignerWithAddress | Wallet,
+    factoryAddress: string,
+    wethAddress: string
+  ): Promise<PancakeRouter> {
+    return await (
+      await new PancakeRouter__factory(signer).deploy(
+        factoryAddress,
+        wethAddress
+      )
+    ).deployed();
+  },
 };
 
 export default deploy;

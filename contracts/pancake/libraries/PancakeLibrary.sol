@@ -4,6 +4,7 @@ pragma solidity ^0.8.1;
 import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
 
 import "./Math.sol";
+import "hardhat/console.sol";
 
 library PancakeLibrary {
     using Math for uint256;
@@ -36,7 +37,7 @@ library PancakeLibrary {
                             hex"ff",
                             factory,
                             keccak256(abi.encodePacked(token0, token1)),
-                            hex"d0d4c4cd0848c93cb4fd1f498d7013ee6bfb25783ea21593d5834f5d250ece66" // init code hash
+                            hex"70d30ed7945fde7dbfacf280aa316630291bce2eb2ddf3a6878da09e23a8c419" // init code hash
                         )
                     )
                 )

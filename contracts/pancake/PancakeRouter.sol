@@ -10,6 +10,7 @@ import "./libraries/PancakeLibrary.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./libraries/Math.sol";
 import "../interfaces/IWETH.sol";
+import "hardhat/console.sol";
 
 contract PancakeRouter is IPancakeRouter {
     using Math for uint256;
