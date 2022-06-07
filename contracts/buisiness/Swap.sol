@@ -11,6 +11,8 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "../pancake/interfaces/IPancakeRouter.sol";
+import "hardhat/console.sol";
 
 contract KoriSwap is ReentrancyGuard, Ownable, AccessControl {
     using SafeMath for uint256;
@@ -44,6 +46,11 @@ contract KoriSwap is ReentrancyGuard, Ownable, AccessControl {
     // The sale percentage to send to the galery
     uint8 public _communityFeePercentage;
 
+    modifier ensure(uint256 deadline) {
+        require(deadline >= block.timestamp, "PancakeRouter: EXPIRED");
+        _;
+    }
+
     modifier onlyAdmin() {
         require(
             hasRole(ADMIN_ROLE, _msgSender()),
@@ -59,6 +66,40 @@ contract KoriSwap is ReentrancyGuard, Ownable, AccessControl {
 
     function setSwapAddress(address swapAddress) external onlyAdmin {
         _swapAddress = swapAddress;
+    }
+
+    function swap(
+        uint256 amountIn,
+        uint256 amountOutMin,
+        address[] calldata path,
+        address to,
+        uint256 deadline
+    ) external virtual ensure(deadline) {
+        // (bool success, ) = _swapAddress.call(
+        //     abi.encodePacked(
+        //         bytes4(
+        //             keccak256(
+        //                 "swapExactTokensForTokens(uint256,uint256,address[],address,uint256)"
+        //             )
+        //         ),
+        //         amountIn,
+        //         amountOutMin,
+        //         path,
+        //         to,
+        //         deadline
+        //     )
+        // );
+        (bool success, ) = _swapAddress.delegatecall(
+            abi.encodeWithSignature(
+                "swapExactTokensForTokens(uint256,uint256,address[],address,uint256)",
+                amountIn,
+                amountOutMin,
+                path,
+                to,
+                deadline
+            )
+        );
+        require(success == true, "delegatecall failed");
     }
 
     // TODO: consider reverting

@@ -13,6 +13,8 @@ import {
   KoriIDO__factory,
   KoriLottery,
   KoriLottery__factory,
+  KoriSwap,
+  KoriSwap__factory,
   KoriToken,
   KoriToken__factory,
   PancakeERC20,
@@ -181,6 +183,21 @@ const deploy = {
       await new PancakeRouter__factory(signer).deploy(
         factoryAddress,
         wethAddress
+      )
+    ).deployed();
+  },
+  // Internal swap
+  async swap(
+    signer: SignerWithAddress | Wallet,
+    adminAddress: string,
+    feeAddress: string,
+    routerAddress: string
+  ): Promise<KoriSwap> {
+    return await (
+      await new KoriSwap__factory(signer).deploy(
+        adminAddress,
+        feeAddress,
+        routerAddress
       )
     ).deployed();
   },
