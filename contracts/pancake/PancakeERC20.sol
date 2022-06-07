@@ -1,24 +1,24 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.1;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "./interfaces/IPancakeERC20.sol";
+import "./libraries/Math.sol";
 
-contract PancakeERC20 is IERC20 {
-    using SafeMath for uint256;
+contract PancakeERC20 is IPancakeERC20 {
+    using Math for uint256;
 
-    string public constant name = "Pancake LPs";
-    string public constant symbol = "Cake-LP";
-    uint8 public constant decimals = 18;
+    string public constant override name = "Pancake LPs";
+    string public constant override symbol = "Cake-LP";
+    uint8 public constant override decimals = 18;
     uint256 public override totalSupply;
-    mapping(address => uint256) public balanceOf;
-    mapping(address => mapping(address => uint256)) public allowance;
+    mapping(address => uint256) public override balanceOf;
+    mapping(address => mapping(address => uint256)) public override allowance;
 
-    bytes32 public DOMAIN_SEPARATOR;
+    bytes32 public override DOMAIN_SEPARATOR;
     // keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
-    bytes32 public constant PERMIT_TYPEHASH =
+    bytes32 public constant override PERMIT_TYPEHASH =
         0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9;
-    mapping(address => uint256) public nonces;
+    mapping(address => uint256) public override nonces;
 
     constructor() public {
         uint256 chainId;
@@ -38,7 +38,7 @@ contract PancakeERC20 is IERC20 {
         );
     }
 
-    function _mint(address to, uint256 value)  internal {
+    function _mint(address to, uint256 value) internal {
         totalSupply = totalSupply.add(value);
         balanceOf[to] = balanceOf[to].add(value);
         emit Transfer(address(0), to, value);
@@ -69,12 +69,20 @@ contract PancakeERC20 is IERC20 {
         emit Transfer(from, to, value);
     }
 
-    function approve(address spender, uint256 value) override external returns (bool) {
+    function approve(address spender, uint256 value)
+        external
+        override
+        returns (bool)
+    {
         _approve(msg.sender, spender, value);
         return true;
     }
 
-    function transfer(address to, uint256 value) override external returns (bool) {
+    function transfer(address to, uint256 value)
+        external
+        override
+        returns (bool)
+    {
         _transfer(msg.sender, to, value);
         return true;
     }
@@ -83,8 +91,8 @@ contract PancakeERC20 is IERC20 {
         address from,
         address to,
         uint256 value
-    ) override external returns (bool) {
-        if (allowance[from][msg.sender] != type(uint128).max) {
+    ) external override returns (bool) {
+        if (allowance[from][msg.sender] != type(uint256).max) {
             allowance[from][msg.sender] = allowance[from][msg.sender].sub(
                 value
             );
@@ -101,7 +109,7 @@ contract PancakeERC20 is IERC20 {
         uint8 v,
         bytes32 r,
         bytes32 s
-    ) external {
+    ) external override {
         require(deadline >= block.timestamp, "Pancake: EXPIRED");
         bytes32 digest = keccak256(
             abi.encodePacked(

@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.3.2",
-    "@uniswap/lib": "^4.0.1-alpha",
     "@uniswap/v2-core": "^1.0.1",
     "merkletreejs": "^0.2.31",
     "web3": "^1.7.1"

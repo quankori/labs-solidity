@@ -2,22 +2,20 @@
 pragma solidity ^0.8.1;
 
 import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
-import "@uniswap/lib/contracts/libraries/TransferHelper.sol";
+import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
+import "./libraries/TransferHelper.sol";
 
-import "../interfaces/IPancakeRouter.sol";
-import "../libs/PancakeLibrary.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
-import "../interfaces/IWETH.sol";
+import "./interfaces/IPancakeRouter.sol";
+import "./libraries/PancakeLibrary.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./libraries/Math.sol";
+import "../interfaces/IWETH.sol";
 
 contract PancakeRouter is IPancakeRouter {
-    using SafeMath for uint256;
+    using Math for uint256;
 
     address public factory;
-
     address public WETH;
-
-    uint256 public constant MAX = type(uint128).max;
 
     modifier ensure(uint256 deadline) {
         require(deadline >= block.timestamp, "PancakeRouter: EXPIRED");
@@ -221,7 +219,7 @@ contract PancakeRouter is IPancakeRouter {
         bytes32 s
     ) external virtual override returns (uint256 amountA, uint256 amountB) {
         address pair = PancakeLibrary.pairFor(factory, tokenA, tokenB);
-        uint256 value = approveMax ? MAX : liquidity;
+        uint256 value = approveMax ? type(uint256).max : liquidity;
         IUniswapV2Pair(pair).permit(
             msg.sender,
             address(this),
@@ -260,7 +258,7 @@ contract PancakeRouter is IPancakeRouter {
         returns (uint256 amountToken, uint256 amountETH)
     {
         address pair = PancakeLibrary.pairFor(factory, token, WETH);
-        uint256 value = approveMax ? MAX : liquidity;
+        uint256 value = approveMax ? type(uint256).max : liquidity;
         IUniswapV2Pair(pair).permit(
             msg.sender,
             address(this),
@@ -320,7 +318,7 @@ contract PancakeRouter is IPancakeRouter {
         bytes32 s
     ) external virtual override returns (uint256 amountETH) {
         address pair = PancakeLibrary.pairFor(factory, token, WETH);
-        uint256 value = approveMax ? MAX : liquidity;
+        uint256 value = approveMax ? type(uint256).max : liquidity;
         IUniswapV2Pair(pair).permit(
             msg.sender,
             address(this),
