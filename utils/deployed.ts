@@ -25,6 +25,8 @@ import {
   PancakePair__factory,
   PancakeRouter,
   PancakeRouter__factory,
+  STO,
+  STO__factory,
 } from "../typechain";
 import { KoriMarketplace__factory } from "../typechain/factories/KoriMarketplace__factory";
 import { KoriNFT__factory } from "../typechain/factories/KoriNFT__factory";
@@ -200,6 +202,23 @@ const deploy = {
         routerAddress
       )
     ).deployed();
+  },
+  // Deploy STO
+  async sto(
+    signer: SignerWithAddress | Wallet,
+    name: string,
+    symbol: string,
+    admin: string,
+    maximun: number,
+    price: number,
+  ): Promise<STO> {
+    return await await new STO__factory(signer).deploy(
+      name,
+      symbol,
+      utils.parseEther(maximun.toString()),
+      utils.parseEther(price.toString()),
+      admin,
+    );
   },
 };
 

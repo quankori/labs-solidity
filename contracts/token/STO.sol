@@ -8,13 +8,15 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
+import "hardhat/console.sol";
+
 /**
  * @title STO Token
  * @dev Very simple ERC20 Token example, where all tokens are pre-assigned to the creator.
  * Note they can later distribute these tokens as they wish using `transfer` and other
  * `ERC20` functions.
  */
-contract KoriSTO is ERC20, ReentrancyGuard, Ownable, AccessControl {
+contract STO is ERC20, ReentrancyGuard, Ownable, AccessControl {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
@@ -22,6 +24,7 @@ contract KoriSTO is ERC20, ReentrancyGuard, Ownable, AccessControl {
     uint256 public fundraisingGoal;
     uint256 public raised;
     uint256 public tokenPrice;
+    address public admin;
     address[] public whitelistedAddresses;
 
     // Mapping
@@ -36,23 +39,28 @@ contract KoriSTO is ERC20, ReentrancyGuard, Ownable, AccessControl {
         string memory symbol,
         uint256 _fundraisingGoal,
         uint256 _tokenPrice,
-        uint256 initialSupply
+        address _admin
     ) public ERC20(name, symbol) {
-        _mint(msg.sender, initialSupply);
         fundraisingGoal = _fundraisingGoal;
         tokenPrice = _tokenPrice;
+        admin = _admin;
     }
 
     // Invest user get token
     function invest() public payable {
-        require(isWhitelisted(msg.sender));
-        require(msg.value > 0);
-        require(msg.value >= tokenPrice);
-        require(raised.add(msg.value) <= fundraisingGoal);
-        uint256 tokens = msg.value.div(tokenPrice);
-        transfer(msg.sender, tokens);
+        require(isWhitelisted(msg.sender), "User is not in whitelist");
+        require(msg.value > 0, "Amount need over 0");
+        require(msg.value >= tokenPrice, "Amount need correct price");
+        require(raised.add(msg.value) <= fundraisingGoal, "Limited to goal");
+        uint256 tokenAmount = msg.value.div(tokenPrice);
+        // uint256 remainingWei = msg.value.sub(tokenAmount.mul(tokenPrice));
+        // console.log(remainingWei);
+        // console.log(tokenAmount);
+        // tokenAmount = tokenAmount.add(remainingWei.mul(10**18).div(tokenPrice));
+        payable(admin).transfer(msg.value);
         raised = raised.add(msg.value);
         raiser[msg.sender].add(msg.value);
+        _mint(msg.sender, tokenAmount * 10**18);
         emit FundTransfer(msg.sender, msg.value);
         if (raised == fundraisingGoal) {
             emit FundRaised();
