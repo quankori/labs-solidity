@@ -22,7 +22,7 @@ import pairJson from "../artifacts/contracts/pancake/PancakePair.sol/PancakePair
 
 chai.use(asPromised);
 
-describe.only("Swap", () => {
+describe("Swap", () => {
   let deployer: SignerWithAddress;
   let guest: SignerWithAddress;
   let admin: SignerWithAddress;
@@ -79,25 +79,6 @@ describe.only("Swap", () => {
     await token.approve(router.address, constants.MaxUint256);
 
     const tx = await router.swapExactTokensForTokens(
-      swapAmount,
-      0,
-      [token.address, token2.address],
-      deployer.address,
-      constants.MaxUint256
-    );
-    const receipt = await tx.wait();
-    expect(receipt.status).eq(1);
-  });
-
-  it.only("swap exact tokens for tokens with another contractS", async () => {
-    const token0Amount = utils.parseEther("5");
-    const token1Amount = utils.parseEther("10");
-    const swapAmount = utils.parseEther("1");
-    // const expectedOutputAmount = BigNumber.from("1662497915624478906");
-    await addLiquidity(token0Amount, token1Amount);
-    await token.approve(router.address, constants.MaxUint256);
-    console.log("addres:", deployer.address);
-    const tx = await swap.swap(
       swapAmount,
       0,
       [token.address, token2.address],

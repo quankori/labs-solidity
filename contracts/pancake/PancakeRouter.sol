@@ -378,7 +378,6 @@ contract PancakeRouter is IPancakeRouter {
         ensure(deadline)
         returns (uint256[] memory amounts)
     {
-        console.log(msg.sender);
         amounts = PancakeLibrary.getAmountsOut(factory, amountIn, path);
         require(
             amounts[amounts.length - 1] >= amountOutMin,
@@ -600,7 +599,6 @@ contract PancakeRouter is IPancakeRouter {
                 amountOutMin,
             "PancakeRouter: INSUFFICIENT_OUTPUT_AMOUNT"
         );
-        console.log("ok");
     }
 
     function swapExactETHForTokensSupportingFeeOnTransferTokens(

@@ -75,20 +75,6 @@ contract KoriSwap is ReentrancyGuard, Ownable, AccessControl {
         address to,
         uint256 deadline
     ) external virtual ensure(deadline) {
-        // (bool success, ) = _swapAddress.call(
-        //     abi.encodePacked(
-        //         bytes4(
-        //             keccak256(
-        //                 "swapExactTokensForTokens(uint256,uint256,address[],address,uint256)"
-        //             )
-        //         ),
-        //         amountIn,
-        //         amountOutMin,
-        //         path,
-        //         to,
-        //         deadline
-        //     )
-        // );
         (bool success, ) = _swapAddress.delegatecall(
             abi.encodeWithSignature(
                 "swapExactTokensForTokens(uint256,uint256,address[],address,uint256)",

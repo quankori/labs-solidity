@@ -97,12 +97,5 @@ describe("Testing Identity BEP-725 and BEP-735", () => {
       claimContactInvestor.address,
       ClaimTypes.KYC
     );
-    // console.log("===================");
-    // console.log(signature);
-    // console.log(hashedDataToSign);
-    // console.log(fractalUser2.address);
-    // console.log(verify);
-    // console.log(utils.verifyMessage(hashedDataToSign, signature));
-    // console.log("===================");
   });
 });
